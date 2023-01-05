@@ -563,20 +563,6 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 	}
 
 	/**
-	 * Sanitize the license activation
-	 *
-	 * @param string $new The new license key.
-	 * @since 1.0.0
-	 */
-	function alm_users_sanitize_license( $new ) {
-		$old = get_option( 'alm_users_license_key' );
-		if ( $old && $old !== $new ) {
-			delete_option( 'alm_users_license_status' ); // new license has been entered, so must reactivate.
-		}
-		return $new;
-	}
-
-	/**
 	 * The main function responsible for returning Ajax Load More Users.
 	 *
 	 * @since 1.0
