@@ -235,13 +235,12 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 		 *
 		 * @see https://codex.wordpress.org/Class_Reference/WP_User_Query
 		 *
-		 * @return $return   JSON
+		 * @return JSON
 		 * @since 1.0
 		 */
 		public function alm_users_query() {
 			$params = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
-
-			if ( ! isset( $params ) ) {
+			if ( ! $params ) {
 				// Bail early if not an Ajax request.
 				return;
 			}
