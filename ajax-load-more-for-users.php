@@ -61,12 +61,12 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 		 * Construct the class.
 		 */
 		public function __construct() {
-			add_action( 'alm_users_installed', array( &$this, 'alm_users_installed' ) );
-			add_action( 'wp_ajax_alm_users', array( &$this, 'alm_users_query' ) );
-			add_action( 'wp_ajax_nopriv_alm_users', array( &$this, 'alm_users_query' ) );
-			add_filter( 'alm_users_shortcode', array( &$this, 'alm_users_shortcode' ), 10, 7 );
-			add_filter( 'alm_users_preloaded', array( &$this, 'alm_users_preloaded' ), 10, 4 );
-			add_action( 'alm_users_settings', array( &$this, 'alm_users_settings' ) );
+			add_action( 'alm_users_installed', [ &$this, 'alm_users_installed' ] );
+			add_action( 'wp_ajax_alm_users', [ &$this, 'alm_users_query' ] );
+			add_action( 'wp_ajax_nopriv_alm_users', [ &$this, 'alm_users_query' ] );
+			add_filter( 'alm_users_shortcode', [ &$this, 'alm_users_shortcode' ], 10, 7 );
+			add_filter( 'alm_users_preloaded', [ &$this, 'alm_users_preloaded' ], 10, 4 );
+			add_action( 'alm_users_settings', [ &$this, 'alm_users_settings' ] );
 		}
 
 		/**
@@ -128,18 +128,18 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 				$role = self::alm_users_get_role_as_array( $role, $role_query );
 
 				// User Query.
-				$preloaded_args = array(
+				$preloaded_args = [
 					$role_query => $role,
 					'number'    => $preloaded_amount,
 					'order'     => $order,
 					'orderby'   => $orderby,
 					'offset'    => $offset,
-				);
+				];
 
 				// Search.
 				if ( $search ) {
 					$preloaded_args['search']         = $search;
-					$preloaded_args['search_columns'] = apply_filters( 'alm_users_query_search_columns_' . $id, array( 'user_login', 'display_name', 'user_nicename' ) );
+					$preloaded_args['search_columns'] = apply_filters( 'alm_users_query_search_columns_' . $id, [ 'user_login', 'display_name', 'user_nicename' ] );
 				}
 
 				// Include.
@@ -163,9 +163,9 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 					$meta_type        = explode( ':', $meta_type ); // convert to array.
 
 					// Loop Meta Query.
-					$preloaded_args['meta_query'] = array(
+					$preloaded_args['meta_query'] = [
 						'relation' => $meta_relation,
-					);
+					];
 
 					for ( $mq_i = 0; $mq_i < $meta_query_total; $mq_i++ ) {
 						$preloaded_args['meta_query'][] = alm_get_meta_query( $meta_keys[ $mq_i ], $meta_value[ $mq_i ], $meta_compare[ $mq_i ], $meta_type[ $mq_i ] );
@@ -222,10 +222,10 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 				}
 			}
 
-			$results = array(
+			$results = [
 				'data'  => $data,
 				'total' => $alm_found_posts,
-			);
+			];
 
 			return $results;
 		}
@@ -252,8 +252,7 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 			$repeater       = isset( $params['repeater'] ) ? $params['repeater'] : 'default';
 			$type           = alm_get_repeater_type( $repeater );
 			$theme_repeater = isset( $params['theme_repeater'] ) ? $params['theme_repeater'] : 'null';
-			$canonical_url  = isset( $params['canonical_url'] ) ? $params['canonical_url'] : $_SERVER['HTTP_REFERER'];
-			$query_type     = isset( $params['query_type'] ) ? $params['query_type'] : 'standard'; // Ajax Query Type.
+			$query_type     = isset( $params['query_type'] ) ? $params['query_type'] : 'standard';
 			$search         = isset( $params['search'] ) ? $params['search'] : '';
 
 			// Users data array - from ajax-load-more.js.
@@ -280,11 +279,11 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 			if ( $meta_compare === 'lessthanequalto' ) {
 				$meta_compare = '<='; // do_shortcode fix (shortcode was rendering as HTML).
 			}
-			$meta_relation = ( isset( $params['meta_relation'] ) ) ? $params['meta_relation'] : '';
+			$meta_relation = isset( $params['meta_relation'] ) ? $params['meta_relation'] : '';
 			if ( empty( $meta_relation ) ) {
 				$meta_relation = 'AND';
 			}
-			$meta_type = ( isset( $params['meta_type'] ) ) ? $params['meta_type'] : '';
+			$meta_type = isset( $params['meta_type'] ) ? $params['meta_type'] : '';
 			if ( empty( $meta_type ) ) {
 				$meta_type = 'CHAR';
 			}
@@ -319,18 +318,18 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 				$role = self::alm_users_get_role_as_array( $role, $role_query );
 
 				// User Query Args.
-				$args = array(
+				$args = [
 					$role_query => $role,
 					'number'    => $users_per_page,
 					'order'     => $order,
 					'orderby'   => $orderby,
 					'offset'    => $offset + ( $users_per_page * $page ),
-				);
+				];
 
 				// Search.
 				if ( $search ) {
 					$args['search']         = $search;
-					$args['search_columns'] = apply_filters( 'alm_users_query_search_columns_' . $id, array( 'user_login', 'display_name', 'user_nicename' ) );
+					$args['search_columns'] = apply_filters( 'alm_users_query_search_columns_' . $id, [ 'user_login', 'display_name', 'user_nicename' ] );
 				}
 
 				// Include.
@@ -347,16 +346,16 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 				if ( ! empty( $meta_key ) && ! empty( $meta_value ) || ! empty( $meta_key ) && $meta_compare !== 'IN' ) {
 
 					// Parse multiple meta query.
-					$meta_query_total = count( explode( ':', $meta_key ) ); // Total meta_query objects
-					$meta_keys        = explode( ':', $meta_key ); // convert to array
-					$meta_value       = explode( ':', $meta_value ); // convert to array
-					$meta_compare     = explode( ':', $meta_compare ); // convert to array
-					$meta_type        = explode( ':', $meta_type ); // convert to array
+					$meta_query_total = count( explode( ':', $meta_key ) ); // Total meta_query objects.
+					$meta_keys        = explode( ':', $meta_key ); // Convert to array.
+					$meta_value       = explode( ':', $meta_value ); // Convert to array.
+					$meta_compare     = explode( ':', $meta_compare ); // Convert to array.
+					$meta_type        = explode( ':', $meta_type ); // Convert to array.
 
 					// Loop Meta Query.
-					$args['meta_query'] = array(
+					$args['meta_query'] = [
 						'relation' => $meta_relation,
-					);
+					];
 					for ( $mq_i = 0; $mq_i < $meta_query_total; $mq_i++ ) {
 						$args['meta_query'][] = alm_get_meta_query( $meta_keys[ $mq_i ], $meta_value[ $mq_i ], $meta_compare[ $mq_i ], $meta_type[ $mq_i ] );
 					}
@@ -388,9 +387,9 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 				$user_query = new WP_User_Query( $args );
 
 				if ( $query_type === 'totalposts' ) {
-					$return = array(
+					$return = [
 						'totalposts' => ! empty( $user_query->results ) ? $user_query->total_users : 0,
-					);
+					];
 
 				} else {
 					$alm_page       = $page;
@@ -429,26 +428,26 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 					}
 
 					// Build return data.
-					$return = array(
+					$return = [
 						'html' => $data,
-						'meta' => array(
+						'meta' => [
 							'postcount'  => isset( $alm_post_count ) ? $alm_post_count : 0,
 							'totalposts' => isset( $alm_found_posts ) ? $alm_found_posts : 0,
 							'debug'      => $debug,
-						),
-					);
+						],
+					];
 				}
 			} else {
 				// Role is empty.
 				// Build return data.
-				$return = array(
+				$return = [
 					'html' => null,
-					'meta' => array(
+					'meta' => [
 						'postcount'  => 0,
 						'totalposts' => 0,
 						'debug'      => $false,
-					),
-				);
+					],
+				];
 			}
 			wp_send_json( $return );
 		}
@@ -488,6 +487,13 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 		/**
 		 * Build Users shortcode params and send back to core ALM.
 		 *
+		 * @param string $users_role The users role.
+		 * @param string $users_include The include query param.
+		 * @param string $users_exclude The exclude query param.
+		 * @param string $users_per_page The per_page query param.
+		 * @param string $users_order The order query param.
+		 * @param string $users_orderby The orderby query param.
+		 * @return string The HTML data attributes as a string.
 		 * @since 1.0
 		 */
 		public function alm_users_shortcode( $users_role, $users_include, $users_exclude, $users_per_page, $users_order, $users_orderby ) {
@@ -540,7 +546,7 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 			$char    = chr( ord( $char ) + ord( $keychar ) );
 			$result .= $char;
 		}
-		return base64_encode( $result );
+		return base64_encode( $result );  // phpcs:ignore
 	}
 
 	/**
@@ -552,7 +558,7 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 	 */
 	function alm_role_decrypt( $string, $key = 5 ) {
 		$result = '';
-		$string = base64_decode( $string );
+		$string = base64_decode( $string ); // phpcs:ignore
 		for ( $i = 0,$k = strlen( $string ); $i < $k; $i++ ) {
 			$char    = substr( $string, $i, 1 );
 			$keychar = substr( $key, ( $i % strlen( $key ) ) - 1, 1 );
