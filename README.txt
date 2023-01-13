@@ -62,7 +62,7 @@ The following Ajax Load More shortcode parameters are available when the Advance
 
 == Changelog ==
 
-= 1.0 - January 5, 2023 =
+= 1.0 - January 13, 2023 =
 * Initial release.
 
 
