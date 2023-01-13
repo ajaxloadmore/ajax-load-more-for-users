@@ -26,7 +26,7 @@ The following Ajax Load More shortcode parameters are available when the Advance
 
 *   **users** - Enable compatibility with Users. (true/false)
 *   **users_role** - The user role to display.
-*   **users_include	** - Show specific users.
+*   **users_include** - Show specific users.
 *   **users_exclude** - Exclude specific users.
 *   **users_per_page** - The number of users to display with each query.
 *   **users_order** - The order of the displayed users.
