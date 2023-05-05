@@ -6,7 +6,7 @@
  * Author: Darren Cooney
  * Twitter: @KaptonKaos
  * Author URI: https://connekthq.com
- * Version: 1.0
+ * Version: 1.1
  * License: GPL
  * Copyright: Darren Cooney & Connekt Media
  *
@@ -32,7 +32,6 @@ require_once plugin_dir_path( __FILE__ ) . 'functions/install.php';
  *  Installation hook.
  */
 function alm_users_extension_install() {
-
 	// Users add-on is installed.
 	if ( is_plugin_active( 'ajax-load-more-users/ajax-load-more-users.php' ) ) {
 		// Deactivate the add-on.
@@ -239,24 +238,25 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 		 * @since 1.0
 		 */
 		public function alm_users_query() {
-			$params = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
-			if ( ! $params ) {
+			$form_data = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
+			if ( ! $form_data ) {
 				// Bail early if not an Ajax request.
 				return;
 			}
 
-			$id             = isset( $params['id'] ) ? $params['id'] : '';
-			$post_id        = isset( $params['post_id'] ) ? $params['post_id'] : '';
-			$page           = isset( $params['page'] ) ? $params['page'] : 0;
-			$offset         = isset( $params['offset'] ) ? $params['offset'] : 0;
-			$repeater       = isset( $params['repeater'] ) ? $params['repeater'] : 'default';
+			$id             = isset( $form_data['id'] ) ? $form_data['id'] : '';
+			$post_id        = isset( $form_data['post_id'] ) ? $form_data['post_id'] : '';
+			$page           = isset( $form_data['page'] ) ? $form_data['page'] : 0;
+			$offset         = isset( $form_data['offset'] ) ? $form_data['offset'] : 0;
+			$repeater       = isset( $form_data['repeater'] ) ? $form_data['repeater'] : 'default';
 			$type           = alm_get_repeater_type( $repeater );
-			$theme_repeater = isset( $params['theme_repeater'] ) ? $params['theme_repeater'] : 'null';
-			$query_type     = isset( $params['query_type'] ) ? $params['query_type'] : 'standard';
-			$search         = isset( $params['search'] ) ? $params['search'] : '';
+			$theme_repeater = isset( $form_data['theme_repeater'] ) ? $form_data['theme_repeater'] : 'null';
+			$query_type     = isset( $form_data['query_type'] ) ? $form_data['query_type'] : 'standard';
+			$search         = isset( $form_data['search'] ) ? $form_data['search'] : '';
+			$canonical_url  = isset( $form_data['canonical_url'] ) ? $form_data['canonical_url'] : $_SERVER['HTTP_REFERER'];
 
 			// Users data array - from ajax-load-more.js.
-			$data = isset( $params['users'] ) ? $params['users'] : '';
+			$data = isset( $form_data['users'] ) ? $form_data['users'] : '';
 			if ( $data ) {
 				$role           = isset( $data['role'] ) ? $data['role'] : '';
 				$users_per_page = isset( $data['per_page'] ) ? $data['per_page'] : 5;
@@ -267,9 +267,9 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 			}
 
 			// Custom Fields.
-			$meta_key     = isset( $params['meta_key'] ) ? $params['meta_key'] : '';
-			$meta_value   = isset( $params['meta_value'] ) ? $params['meta_value'] : '';
-			$meta_compare = isset( $params['meta_compare'] ) ? $params['meta_compare'] : '';
+			$meta_key     = isset( $form_data['meta_key'] ) ? $form_data['meta_key'] : '';
+			$meta_value   = isset( $form_data['meta_value'] ) ? $form_data['meta_value'] : '';
+			$meta_compare = isset( $form_data['meta_compare'] ) ? $form_data['meta_compare'] : '';
 			if ( empty( $meta_compare ) ) {
 				$meta_compare = 'IN';
 			}
@@ -279,22 +279,35 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 			if ( $meta_compare === 'lessthanequalto' ) {
 				$meta_compare = '<='; // do_shortcode fix (shortcode was rendering as HTML).
 			}
-			$meta_relation = isset( $params['meta_relation'] ) ? $params['meta_relation'] : '';
+			$meta_relation = isset( $form_data['meta_relation'] ) ? $form_data['meta_relation'] : '';
 			if ( empty( $meta_relation ) ) {
 				$meta_relation = 'AND';
 			}
-			$meta_type = isset( $params['meta_type'] ) ? $params['meta_type'] : '';
+			$meta_type = isset( $form_data['meta_type'] ) ? $form_data['meta_type'] : '';
 			if ( empty( $meta_type ) ) {
 				$meta_type = 'CHAR';
 			}
 
 			// Cache Add-on.
-			$cache_id = isset( $params['cache_id'] ) ? $params['cache_id'] : '';
-			$is_cache = ! empty( $cache_id ) && has_action( 'alm_cache_installed' );
+			$cache_id        = isset( $form_data['cache_id'] ) ? $form_data['cache_id'] : '';
+			$cache_logged_in = isset( $form_data['cache_logged_in'] ) ? $form_data['cache_logged_in'] : false;
+			$do_create_cache = $cache_logged_in === 'true' && is_user_logged_in() ? false : true;
+			$md5_hash        = $cache_id ? md5( wp_json_encode( $form_data ) ) : '';
+
+			/**
+			 * Cache Add-on.
+			 * Check for cached data before running WP_Query.
+			 */
+			if ( $cache_id && method_exists( 'ALMCache', 'get_cache_file' ) && $query_type !== 'totalposts' ) {
+				$cache_data = ALMCache::get_cache_file( $cache_id, $md5_hash );
+				if ( $cache_data ) {
+					wp_send_json( $cache_data );
+				}
+			}
 
 			// Preload Add-on.
-			$preloaded        = isset( $params['preloaded'] ) ? $params['preloaded'] : false;
-			$preloaded_amount = isset( $params['preloaded_amount'] ) ? $params['preloaded_amount'] : '5';
+			$preloaded        = isset( $form_data['preloaded'] ) ? $form_data['preloaded'] : false;
+			$preloaded_amount = isset( $form_data['preloaded_amount'] ) ? $form_data['preloaded_amount'] : '5';
 			if ( has_action( 'alm_preload_installed' ) && $preloaded === 'true' ) {
 				$old_offset     = $preloaded_amount;
 				$offset         = $offset + $preloaded_amount;
@@ -304,7 +317,7 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 			}
 
 			// SEO Add-on.
-			$seo_start_page = isset( $params['seo_start_page'] ) ? $params['seo_start_page'] : 1;
+			$seo_start_page = isset( $form_data['seo_start_page'] ) ? $form_data['seo_start_page'] : 1;
 
 			if ( ! empty( $role ) ) { // Role Defined.
 
@@ -381,7 +394,7 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 				 *
 				 * @return $alm_query/false;
 				 */
-				$debug = apply_filters( 'alm_debug', false ) && ! $is_cache ? $args : false;
+				$debug = apply_filters( 'alm_debug', false ) && ! $cache_id ? $args : false;
 
 				// WP_User_Query.
 				$user_query = new WP_User_Query( $args );
@@ -417,14 +430,6 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 						}
 
 						$data = ob_get_clean();
-
-						/**
-						 * Cache Add-on hook.
-						 * If Cache is enabled, check the cache file.
-						 */
-						if ( $is_cache ) {
-							apply_filters( 'alm_cache_file', $cache_id, $page, $seo_start_page, $data, $preloaded );
-						}
 					}
 
 					// Build return data.
@@ -436,6 +441,14 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 							'debug'      => $debug,
 						],
 					];
+
+					/**
+					 * Cache Add-on.
+					 * Create the cache file.
+					 */
+					if ( $cache_id && method_exists( 'ALMCache', 'create_cache_file' ) && $do_create_cache ) {
+						ALMCache::create_cache_file( $cache_id, $md5_hash, $canonical_url, $data, $alm_post_count, $alm_found_posts );
+					}
 				}
 			} else {
 				// Role is empty.

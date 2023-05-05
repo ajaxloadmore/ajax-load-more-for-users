@@ -7,8 +7,8 @@ Plugin URI: https://connekthq.com/ajax-load-more/extensions/users/
 Donate link: https://connekthq.com/donate/
 Tags: ajax load more, users, wordpress users, infinite scroll, lazy load users, WP_User_Query
 Requires at least: 4.0
-Tested up to: 6.1
-Stable tag: 1.0
+Tested up to: 6.2
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,10 @@ The following Ajax Load More shortcode parameters are available when the Advance
 
 
 == Changelog ==
+
+= 1.1 - May 5, 2023 =
+* UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
+
 
 = 1.0 - January 13, 2023 =
 * Initial release.
