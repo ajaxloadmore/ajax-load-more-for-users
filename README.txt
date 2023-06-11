@@ -62,7 +62,7 @@ The following Ajax Load More shortcode parameters are available when the Advance
 
 == Changelog ==
 
-= 1.1 - May 5, 2023 =
+= 1.1 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
 
 
