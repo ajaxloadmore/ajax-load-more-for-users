@@ -5,7 +5,7 @@ Author: Erick Danzer
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/extensions/users/
 Donate link: https://connekthq.com/donate/
-Tags: ajax load more, users, wordpress users, infinite scroll, lazy load users, WP_User_Query
+Tags: ajax load more, users, infinite scroll, lazy load, ajax
 Requires at least: 4.0
 Tested up to: 6.7
 Stable tag: 1.1.1
