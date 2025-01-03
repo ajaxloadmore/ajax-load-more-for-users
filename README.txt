@@ -1,7 +1,7 @@
 === Ajax Load More for Users ===
 
-Contributors: edanzer, dcooney
-Author: Erick Danzer
+Contributors: dcooney, connekthq
+Author: Darren Cooney
 Author URI: https://connekthq.com/
 Plugin URI: https://connekthq.com/ajax-load-more/extensions/users/
 Donate link: https://connekthq.com/donate/
@@ -36,7 +36,6 @@ The following Ajax Load More shortcode parameters are available when the Advance
 
     [ajax_load_more users="true" users_role="Subscriber" users_per_page="2"]
 
-
 == Frequently Asked Questions ==
 
 
@@ -64,15 +63,12 @@ The following Ajax Load More shortcode parameters are available when the Advance
 
 = 1.1.1 - November 11, 2024 = 
 * UPDATE: Readme, contributors, WordPress tested version
-* NOTE: Plugin has new ownership
 
 = 1.1 - June 11, 2023 =
 * UPDATE: Updated to add compatibility with Cache Add-on 2.0 and Ajax Load More 6.0.
 
-
 = 1.0 - January 13, 2023 =
 * Initial release.
-
 
 == Upgrade Notice ==
 * None

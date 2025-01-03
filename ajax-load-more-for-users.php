@@ -3,11 +3,11 @@
  * Plugin Name: Ajax Load More for Users
  * Plugin URI: https://connekthq.com/plugins/ajax-load-more/extensions/users/
  * Description: Ajax Load More extension to infinite scroll WordPress users.
- * Author: Erick Danzer
+ * Author: Darren Cooney
  * Author URI: https://connekthq.com
  * Version: 1.1.1
  * License: GPL
- * Copyright: Erick Danzer & AjaxWP LLC
+ * Copyright: Connekt Media & Darren Cooney
  *
  * @package ALM_Users
  */
@@ -198,8 +198,8 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 
 					foreach ( $user_query->results as $user ) {
 
-						$alm_item++;
-						$alm_current++;
+						++$alm_item;
+						++$alm_current;
 
 						// Repeater Template.
 						if ( $theme_repeater !== 'null' && has_action( 'alm_get_theme_repeater' ) ) {
@@ -405,8 +405,8 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 
 						ob_start();
 						foreach ( $user_query->results as $user ) {
-							$alm_item++;
-							$alm_current++;
+							++$alm_item;
+							++$alm_current;
 							$alm_item = ( $alm_page_count * $users_per_page ) - $users_per_page + $alm_loop_count; // Get current item.
 							if ( $theme_repeater !== 'null' && has_action( 'alm_get_theme_repeater' ) ) {
 								// Theme Repeater.
@@ -560,7 +560,7 @@ if ( ! class_exists( 'ALMUsers' ) ) :
 	function alm_role_decrypt( $string, $key = 5 ) {
 		$result = '';
 		$string = base64_decode( $string ); // phpcs:ignore
-		for ( $i = 0,$k = strlen( $string ); $i < $k; $i++ ) {
+		for ( $i = 0, $k = strlen( $string ); $i < $k; $i++ ) {
 			$char    = substr( $string, $i, 1 );
 			$keychar = substr( $key, ( $i % strlen( $key ) ) - 1, 1 );
 			$char    = chr( ord( $char ) - ord( $keychar ) );
