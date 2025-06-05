@@ -5,9 +5,10 @@
  * Description: Ajax Load More extension to infinite scroll WordPress users.
  * Author: Darren Cooney
  * Author URI: https://connekthq.com
- * Version: 1.1.1
+ * Version: 1.1.2
  * License: GPL
  * Copyright: Connekt Media & Darren Cooney
+ * Requires Plugins: ajax-load-more
  *
  * @package ALM_Users
  */
