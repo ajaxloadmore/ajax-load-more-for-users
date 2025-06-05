@@ -8,7 +8,7 @@ Donate link: https://connekthq.com/donate/
 Tags: ajax load more, users, infinite scroll, lazy load, ajax
 Requires at least: 4.0
 Tested up to: 6.8
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://gnu.org/licenses/gpl-2.0.html
 
@@ -61,8 +61,9 @@ The following Ajax Load More shortcode parameters are available when the Advance
 
 == Changelog ==
 
-= 1.1.2 - June 5, 2025 = 
-* UPDATE: Updated require plugin, readme and WP tested version.
+= 1.1.3 - June 5, 2025 = 
+* NEW: Adding Ajax Load More as a required plugin.
+* UPDATE: Code cleanup, readme and WP tested version.
 
 = 1.1.1 - November 11, 2024 = 
 * UPDATE: Readme, contributors, WordPress tested version
