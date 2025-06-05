@@ -32,20 +32,14 @@ require_once plugin_dir_path( __FILE__ ) . 'functions/install.php';
  *  Installation hook.
  */
 function alm_users_extension_install() {
-	// Users add-on is installed.
+	// Users "add-on" is installed, deactivate it.
 	if ( is_plugin_active( 'ajax-load-more-users/ajax-load-more-users.php' ) ) {
-		// Deactivate the add-on.
 		deactivate_plugins( 'ajax-load-more-users/ajax-load-more-users.php' );
 	}
 
 	// ALM Pro add-on is installed and Users is activated.
 	if ( is_plugin_active( 'ajax-load-more-pro/ajax-load-more-pro.php' ) && class_exists( 'ALMUsers' ) ) {
 		set_transient( 'alm_users_extension_pro_admin_notice', true, 5 );
-	}
-
-	// Confirm core Ajax Load More is installed.
-	if ( ! is_plugin_active( 'ajax-load-more/ajax-load-more.php' ) ) {
-		set_transient( 'alm_users_extension_admin_notice', true, 5 );
 	}
 }
 register_activation_hook( __FILE__, 'alm_users_extension_install' );
